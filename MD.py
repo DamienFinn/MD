@@ -22,10 +22,10 @@ import random
 parser = argparse.ArgumentParser(description= 'Derive a Metagenomic Diversity index from clustered amino acid sequences')
 parser.add_argument('-i', '--input-file', required = True, nargs = 1, 
                     help = 'Amino acid sequence contigs as .faa')
-parser.add_argument('-r', '--rarefy', required = False, nargs = 1, 
-                    help = 'To rarefy contig observations or not, as T if rarefying')
+parser.add_argument('-r', '--random-sampling', required = False, nargs = 1, 
+                    help = 'To randomly subsample contig observations or not, as T if randomly subsampling')
 parser.add_argument('-N', '--contig-obs', required = False, nargs = 1, type = int, 
-                    help = 'If rarefying, N denotes the number of contigs')
+                    help = 'If randomly subsampling, N denotes the number of contigs to subsample without replacement')
 
 args = parser.parse_args()
 
@@ -50,7 +50,7 @@ with open(input_clust) as file:
     for l in file:
         clustlist.append(l.rstrip())
 
-if str(args.rarefy[0])  == 'T':
+if str(args.random_sampling[0])  == 'T':
     rarvals = random.sample(clustlist, int(args.contig_obs[0]))
     clustlist = rarvals
 
