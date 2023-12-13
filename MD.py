@@ -39,14 +39,13 @@ input_file = os.path.join(os.getcwd(), str(args.input_file[0]))
 # Run MMseqs2 
 os.system('mmseqs createdb ' + input_file + ' DB')
 
-def MMseqs2Clustering(input_file, args.Eval[0], args.identity[0]):
-  if len(args.Eval[0]) < 1 and len(args.identity[0] < 1: 
+if args.Eval is None and args.identity is None: 
     os.system('mmseqs cluster DB Clu tmp')
-  elif len(args.Eval[0]) == 1 and len(args.identity[0]) < 1:
+elif args.Eval is not None and args.identity is None:
     os.system('mmseqs cluster DB Clu tmp -e ' + args.Eval[0] )
-  elif len(args.Eval[0]) < 1 and len(args.identity[0]) == 1:
+elif args.Eval is None and args.identity is not None:
     os.system('mmseqs cluster DB Clu tmp --min-seq-id ' + args.identity[0] )
-  elif len(args.Eval[0]) == 1 and len(args.identity[0]) == 1:
+elif args.Eval is not None and args.identity is not None:
     os.system('mmseqs cluster DB Clu tmp -e ' + args.Eval[0] + ' --min-seq-id ' + args.identity[0] )
 
 os.system('mmseqs createtsv DB DB Clu Clu.tsv')
