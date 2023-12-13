@@ -28,9 +28,9 @@ parser.add_argument('-r', '--random-sampling', required = False, nargs = 1,
                     help = 'To randomly subsample observations or not, as T if randomly subsampling')
 parser.add_argument('-N', '--contig-obs', required = False, nargs = 1, type = int, 
                     help = 'If randomly subsampling, N denotes the number to subsample without replacement')
-parser.add_argument('-e', '--Eval', required = False, nargs = 1, type = float, 
+parser.add_argument('-e', '--Eval', required = False, nargs = 1, type = str, 
                     help = 'Redefine the MMSeqs2 minimum Evalue cutoff score')
-parser.add_argument('-I', '--identity', required = False, nargs = 1, type = float, 
+parser.add_argument('-I', '--identity', required = False, nargs = 1, type = str, 
                     help = 'Redefine the MMSeqs2 minimum sequence identity cutoff score')
 args = parser.parse_args()
 
