@@ -4,9 +4,9 @@
 
 # Note: this code assumes you have installed MMseqs2 
 
-# Usage without rarefying: python MD.py -i <contig_file.faa> -r F 
-# With rarefying: python MD.py -i <contig_file.faa> -r T -N xxx
-# where xxx is the seq depth for rarefying
+# Usage without random subsampling: python MD.py -i <predicted_protein-encoding_genes_file.faa> -r F 
+# With random subsampling: python MD.py -i <predicted_protein-encoding_genes_file.faa> -r T -N xxx
+# where xxx is the total number of observations to randomly subsample
 
 # Written by Damien Finn, damien.finn@thuenen.de  
 
@@ -21,11 +21,11 @@ import random
 
 parser = argparse.ArgumentParser(description= 'Derive a Metagenomic Diversity index from clustered amino acid sequences')
 parser.add_argument('-i', '--input-file', required = True, nargs = 1, 
-                    help = 'Amino acid sequence contigs as .faa')
+                    help = 'Amino acid sequences as .faa')
 parser.add_argument('-r', '--random-sampling', required = False, nargs = 1, 
-                    help = 'To randomly subsample contig observations or not, as T if randomly subsampling')
+                    help = 'To randomly subsample observations or not, as T if randomly subsampling')
 parser.add_argument('-N', '--contig-obs', required = False, nargs = 1, type = int, 
-                    help = 'If randomly subsampling, N denotes the number of contigs to subsample without replacement')
+                    help = 'If randomly subsampling, N denotes the number to subsample without replacement')
 
 args = parser.parse_args()
 
