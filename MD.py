@@ -7,6 +7,8 @@
 # Usage without random subsampling: python MD.py -i <predicted_protein-encoding_genes_file.faa> -r F 
 # With random subsampling: python MD.py -i <predicted_protein-encoding_genes_file.faa> -r T -N xxx
 # where xxx is the total number of observations to randomly subsample
+# Where users may wish to define their own MMSeqs2 E value and/or sequence identity cut-offs: python MD.py -i <predicted_protein-encoding_genes_file.faa> -r F -e xxx -I yyy
+# where xxx and yyy are the user degined inputs for these cut-offs
 
 # Written by Damien Finn, damien.finn@thuenen.de  
 
@@ -26,15 +28,27 @@ parser.add_argument('-r', '--random-sampling', required = False, nargs = 1,
                     help = 'To randomly subsample observations or not, as T if randomly subsampling')
 parser.add_argument('-N', '--contig-obs', required = False, nargs = 1, type = int, 
                     help = 'If randomly subsampling, N denotes the number to subsample without replacement')
-
+parser.add_argument('-e', '--Eval', required = False, nargs = 1, type = float, 
+                    help = 'Redefine the MMSeqs2 minimum Evalue cutoff score')
+parser.add_argument('-I', '--identity', required = False, nargs = 1, type = float, 
+                    help = 'Redefine the MMSeqs2 minimum sequence identity cutoff score')
 args = parser.parse_args()
 
 input_file = os.path.join(os.getcwd(), str(args.input_file[0]))
 
 # Run MMseqs2 
-
 os.system('mmseqs createdb ' + input_file + ' DB')
-os.system('mmseqs cluster DB Clu tmp')
+
+def MMseqs2Clustering(input_file, args.Eval[0], args.identity[0]):
+  if len(args.Eval[0]) < 1 and len(args.identity[0] < 1: 
+    os.system('mmseqs cluster DB Clu tmp')
+  elif len(args.Eval[0]) == 1 and len(args.identity[0]) < 1:
+    os.system('mmseqs cluster DB Clu tmp -e ' + args.Eval[0] )
+  elif len(args.Eval[0]) < 1 and len(args.identity[0]) == 1:
+    os.system('mmseqs cluster DB Clu tmp --min-seq-id ' + args.identity[0] )
+  elif len(args.Eval[0]) == 1 and len(args.identity[0]) == 1:
+    os.system('mmseqs cluster DB Clu tmp -e ' + args.Eval[0] + ' --min-seq-id ' + args.identity[0] )
+
 os.system('mmseqs createtsv DB DB Clu Clu.tsv')
 os.system('mmseqs search DB DB res tmp')
 os.system('mmseqs convertalis DB DB res res.m8')
