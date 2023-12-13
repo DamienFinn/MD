@@ -112,7 +112,7 @@ print(' -- Deriving diversity indices -- ')
 
 # Total Contigs
 O = len(clustlist)
-print('Total Contigs: ', O)
+print('Total protein-encoding genes: ', O)
 
 # Protein Richness
 P = len(clustdist)
