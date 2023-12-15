@@ -26,8 +26,8 @@ parser.add_argument('-i', '--input-file', required = True, nargs = 1,
                     help = 'Amino acid sequences as .faa')
 parser.add_argument('-r', '--random-sampling', required = False, nargs = 1, 
                     help = 'To randomly subsample observations or not, as T if randomly subsampling')
-parser.add_argument('-N', '--contig-obs', required = False, nargs = 1, type = int, 
-                    help = 'If randomly subsampling, N denotes the number to subsample without replacement')
+parser.add_argument('-N', '--seq-obs', required = False, nargs = 1, type = int, 
+                    help = 'If randomly subsampling, N denotes the number of observations to subsample without replacement')
 parser.add_argument('-e', '--Eval', required = False, nargs = 1, type = str, 
                     help = 'Redefine the MMSeqs2 minimum Evalue cutoff score')
 parser.add_argument('-I', '--identity', required = False, nargs = 1, type = str, 
@@ -64,7 +64,7 @@ with open(input_clust) as file:
         clustlist.append(l.rstrip())
 
 if str(args.random_sampling[0])  == 'T':
-    rarvals = random.sample(clustlist, int(args.contig_obs[0]))
+    rarvals = random.sample(clustlist, int(args.seq_obs[0]))
     clustlist = rarvals
 
 clusters = defaultdict(list) 
