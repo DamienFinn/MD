@@ -87,15 +87,15 @@ with open(input_aln) as file:
     for l in file:
         alnlist.append(l.rstrip())
 
-pairsim = defaultdict(list)
+pairsim = {}
 
+# Edited 04.06.24 to improve performance time as per kbseah suggestion
 def make_pairsim_dict(alnlist):
     for l in alnlist:
-        col1 = l.split('\t')[0]
-        col2 = l.split('\t')[1]
-        col3 = l.split('\t')[2]
-        tmp = [col2, col3]
-        pairsim[col1].append(tmp)
+        # first three columns: query, ref, id
+        [col1, col2, col3] = l.split("\t")[0:3]
+        # key on query-ref pairs (faster lookup than nested dict)
+        pairsim[(col1, col2)] = col3
 
 pool.apply_async(make_pairsim_dict(alnlist))
 
@@ -103,16 +103,14 @@ pool.apply_async(make_pairsim_dict(alnlist))
 print(' -- Bringing things together -- ')
 clustdist = defaultdict(list)
 
+# Edited 04.06.24 to improve performance time as per kbseah suggestion
 def sorter(clusters, pairsim):
-    for c in clusters.keys(): # key name
-        v = clusters[c] # values in c
-        for q in pairsim.keys():
-            if c == q: # if clusters key and pairsim key match
-                valq = pairsim[q] # pairwise values in q
-                for a in v:
-                    for b in valq:
-                        if a == b[0]: # matching cluster pair with pairsim value pair
-                            clustdist[c].append(1 - float(b[1]))
+    for c in clusters:  # key name
+            for a in clusters[c]:
+                # look up pairwise identity values from search output
+                if (c,a) in pairsim:
+                    id_val = pairsim[(c,a)]  # pairwise values in q
+                    clustdist[c].append(1 - float(id_val))
 
 pool.apply_async(sorter(clusters, pairsim))
 
